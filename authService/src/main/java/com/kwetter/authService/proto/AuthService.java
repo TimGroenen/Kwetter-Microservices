@@ -2,6 +2,7 @@ package com.kwetter.authService.proto;
 
 import com.kwetter.authService.entity.AccountEntity;
 import com.kwetter.authService.repository.AccountRepository;
+import com.kwetter.authService.security.JwtTokenUtil;
 import io.grpc.stub.StreamObserver;
 import com.kwetter.authService.proto.AuthServiceGrpc.AuthServiceImplBase;
 import com.kwetter.authService.proto.AuthServiceOuterClass.*;
@@ -55,8 +56,8 @@ public class AuthService extends AuthServiceImplBase {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10, new SecureRandom());
         AccountEntity accountToCheck = repository.findAccountEntityByEmail(request.getEmail());
         if(accountToCheck != null && encoder.matches(request.getPassword(), accountToCheck.getPassword())) {
-            //TODO: Generate token
-            response.setStatus(true).setMessage("Generated Token");
+            String token = new JwtTokenUtil().generateToken(request.getEmail());
+            response.setStatus(true).setMessage(token);
             logger.info("Successful login, email: " + request.getEmail());
         } else {
             response.setStatus(false).setMessage("Wrong email/password");
@@ -72,9 +73,14 @@ public class AuthService extends AuthServiceImplBase {
         //Validate token
         ValidationResponse.Builder response = ValidationResponse.newBuilder();
 
-        response.setStatus(true).setMessage("Validation success");
+        if(new JwtTokenUtil().validateToken(request.getToken(), request.getEmail())) {
+            response.setStatus(true).setMessage("Valid token");
+            logger.info("Token validated, email: " + request.getEmail());
+        } else {
+            response.setStatus(false).setMessage("Invalid token");
+            logger.info("Invalid token, email: " + request.getEmail());
+        }
 
-        logger.info("Token validation request success, token: " + request.getToken());
         responseObserver.onNext(response.build());
         responseObserver.onCompleted();
     }

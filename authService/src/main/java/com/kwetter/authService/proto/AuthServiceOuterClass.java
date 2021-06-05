@@ -3419,6 +3419,16 @@ public final class AuthServiceOuterClass {
      */
     com.google.protobuf.ByteString
         getTokenBytes();
+
+    /**
+     * <code>optional string email = 2;</code>
+     */
+    java.lang.String getEmail();
+    /**
+     * <code>optional string email = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getEmailBytes();
   }
   /**
    * <pre>
@@ -3437,6 +3447,7 @@ public final class AuthServiceOuterClass {
     }
     private ValidationRequest() {
       token_ = "";
+      email_ = "";
     }
 
     @java.lang.Override
@@ -3468,6 +3479,12 @@ public final class AuthServiceOuterClass {
               java.lang.String s = input.readStringRequireUtf8();
 
               token_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              email_ = s;
               break;
             }
           }
@@ -3527,6 +3544,40 @@ public final class AuthServiceOuterClass {
       }
     }
 
+    public static final int EMAIL_FIELD_NUMBER = 2;
+    private volatile java.lang.Object email_;
+    /**
+     * <code>optional string email = 2;</code>
+     */
+    public java.lang.String getEmail() {
+      java.lang.Object ref = email_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        email_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>optional string email = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getEmailBytes() {
+      java.lang.Object ref = email_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        email_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -3542,6 +3593,9 @@ public final class AuthServiceOuterClass {
       if (!getTokenBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, token_);
       }
+      if (!getEmailBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, email_);
+      }
     }
 
     public int getSerializedSize() {
@@ -3551,6 +3605,9 @@ public final class AuthServiceOuterClass {
       size = 0;
       if (!getTokenBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, token_);
+      }
+      if (!getEmailBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, email_);
       }
       memoizedSize = size;
       return size;
@@ -3570,6 +3627,8 @@ public final class AuthServiceOuterClass {
       boolean result = true;
       result = result && getToken()
           .equals(other.getToken());
+      result = result && getEmail()
+          .equals(other.getEmail());
       return result;
     }
 
@@ -3582,6 +3641,8 @@ public final class AuthServiceOuterClass {
       hash = (19 * hash) + getDescriptorForType().hashCode();
       hash = (37 * hash) + TOKEN_FIELD_NUMBER;
       hash = (53 * hash) + getToken().hashCode();
+      hash = (37 * hash) + EMAIL_FIELD_NUMBER;
+      hash = (53 * hash) + getEmail().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -3706,6 +3767,8 @@ public final class AuthServiceOuterClass {
         super.clear();
         token_ = "";
 
+        email_ = "";
+
         return this;
       }
 
@@ -3729,6 +3792,7 @@ public final class AuthServiceOuterClass {
       public com.kwetter.authService.proto.AuthServiceOuterClass.ValidationRequest buildPartial() {
         com.kwetter.authService.proto.AuthServiceOuterClass.ValidationRequest result = new com.kwetter.authService.proto.AuthServiceOuterClass.ValidationRequest(this);
         result.token_ = token_;
+        result.email_ = email_;
         onBuilt();
         return result;
       }
@@ -3772,6 +3836,10 @@ public final class AuthServiceOuterClass {
         if (other == com.kwetter.authService.proto.AuthServiceOuterClass.ValidationRequest.getDefaultInstance()) return this;
         if (!other.getToken().isEmpty()) {
           token_ = other.token_;
+          onChanged();
+        }
+        if (!other.getEmail().isEmpty()) {
+          email_ = other.email_;
           onChanged();
         }
         onChanged();
@@ -3865,6 +3933,75 @@ public final class AuthServiceOuterClass {
   checkByteStringIsUtf8(value);
         
         token_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object email_ = "";
+      /**
+       * <code>optional string email = 2;</code>
+       */
+      public java.lang.String getEmail() {
+        java.lang.Object ref = email_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          email_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string email = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getEmailBytes() {
+        java.lang.Object ref = email_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          email_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string email = 2;</code>
+       */
+      public Builder setEmail(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        email_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string email = 2;</code>
+       */
+      public Builder clearEmail() {
+        
+        email_ = getDefaultInstance().getEmail();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string email = 2;</code>
+       */
+      public Builder setEmailBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        email_ = value;
         onChanged();
         return this;
       }
@@ -4537,18 +4674,19 @@ public final class AuthServiceOuterClass {
       "\030\003 \001(\0132&.com.kwetter.authService.proto.A" +
       "ccount\"/\n\014LoginRequest\022\r\n\005email\030\001 \001(\t\022\020\n" +
       "\010password\030\002 \001(\t\"0\n\rLoginResponse\022\016\n\006stat" +
-      "us\030\001 \001(\010\022\017\n\007message\030\002 \001(\t\"\"\n\021ValidationR",
-      "equest\022\r\n\005token\030\001 \001(\t\"5\n\022ValidationRespo" +
-      "nse\022\016\n\006status\030\001 \001(\010\022\017\n\007message\030\002 \001(\t2\324\002\n" +
-      "\013AuthService\022k\n\010Register\022..com.kwetter.a" +
-      "uthService.proto.RegisterRequest\032/.com.k" +
-      "wetter.authService.proto.RegisterRespons" +
-      "e\022b\n\005Login\022+.com.kwetter.authService.pro" +
-      "to.LoginRequest\032,.com.kwetter.authServic" +
-      "e.proto.LoginResponse\022t\n\rValidateToken\0220" +
-      ".com.kwetter.authService.proto.Validatio" +
-      "nRequest\0321.com.kwetter.authService.proto",
-      ".ValidationResponseb\006proto3"
+      "us\030\001 \001(\010\022\017\n\007message\030\002 \001(\t\"1\n\021ValidationR",
+      "equest\022\r\n\005token\030\001 \001(\t\022\r\n\005email\030\002 \001(\t\"5\n\022" +
+      "ValidationResponse\022\016\n\006status\030\001 \001(\010\022\017\n\007me" +
+      "ssage\030\002 \001(\t2\324\002\n\013AuthService\022k\n\010Register\022" +
+      "..com.kwetter.authService.proto.Register" +
+      "Request\032/.com.kwetter.authService.proto." +
+      "RegisterResponse\022b\n\005Login\022+.com.kwetter." +
+      "authService.proto.LoginRequest\032,.com.kwe" +
+      "tter.authService.proto.LoginResponse\022t\n\r" +
+      "ValidateToken\0220.com.kwetter.authService." +
+      "proto.ValidationRequest\0321.com.kwetter.au",
+      "thService.proto.ValidationResponseb\006prot" +
+      "o3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4597,7 +4735,7 @@ public final class AuthServiceOuterClass {
     internal_static_com_kwetter_authService_proto_ValidationRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kwetter_authService_proto_ValidationRequest_descriptor,
-        new java.lang.String[] { "Token", });
+        new java.lang.String[] { "Token", "Email", });
     internal_static_com_kwetter_authService_proto_ValidationResponse_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_com_kwetter_authService_proto_ValidationResponse_fieldAccessorTable = new
