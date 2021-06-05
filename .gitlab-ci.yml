@@ -26,7 +26,7 @@ buildImageAuthService:
     image: docker:latest
     script: 
         - cd authService
-        - docker build . -t timgroenen/kwetterAuthService
+        - docker build . -t timgroenen/kwetterauthservice
 
 #push docker image to dockerhub
 pushImageAuthService:
@@ -35,4 +35,4 @@ pushImageAuthService:
     script:
         - cd authService
         - docker login --username $dockerUsername --password $dockerPassword
-        - docker push timgroenen/kwetterAuthService
+        - docker push timgroenen/kwetterauthservice
