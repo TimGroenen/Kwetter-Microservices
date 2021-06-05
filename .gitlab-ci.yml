@@ -1,0 +1,36 @@
+image: maven:3-jdk-11
+
+stages:
+    - build
+    - test
+    - buildImage
+    - pushImage
+
+#Build stage
+buildAuthService:
+    stage: build
+    script:
+        - cd authService
+        - mvn package -Dmaven.test.skip=true
+
+#Test stage
+testAuthService:
+    stage: test
+    script:
+        - cd authService
+        - mvn test
+
+#Build docker image
+buildImageAuthService:
+    stage: buildImage
+    script: 
+        - cd authService
+        - docker build . -t timgroenen/kwetterAuthService
+
+#push docker image to dockerhub
+pushImageAuthService:
+    stage: pushImage
+    script:
+        - cd authService
+        - docker login --username $dockerUsername --password $dockerPassword
+        - docker push timgroenen/kwetterAuthService
