@@ -23,6 +23,7 @@ testAuthService:
 #Build docker image
 buildImageAuthService:
     stage: buildImage
+    image: docker:latest
     script: 
         - cd authService
         - docker build . -t timgroenen/kwetterAuthService
@@ -30,6 +31,7 @@ buildImageAuthService:
 #push docker image to dockerhub
 pushImageAuthService:
     stage: pushImage
+    image: docker:latest
     script:
         - cd authService
         - docker login --username $dockerUsername --password $dockerPassword
