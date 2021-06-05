@@ -9,6 +9,9 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.security.SecureRandom;
 
 @GrpcService
 public class AuthService extends AuthServiceImplBase {
@@ -35,8 +38,8 @@ public class AuthService extends AuthServiceImplBase {
             //Save new account
             AccountEntity account = new AccountEntity();
             account.setEmail(email);
-            //TODO: Hash password
-            account.setPassword(password);
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10, new SecureRandom());
+            account.setPassword(encoder.encode(password));
             response.setAccount(repository.save(account).toAccountClass()).setStatus(true).setMessage("Success");
             logger.info("Register request success, email: " + email);
         }
@@ -49,9 +52,9 @@ public class AuthService extends AuthServiceImplBase {
     public void login(LoginRequest request, StreamObserver<LoginResponse> responseObserver) {
         //Login and return token
         LoginResponse.Builder response = LoginResponse.newBuilder();
-
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10, new SecureRandom());
         AccountEntity accountToCheck = repository.findAccountEntityByEmail(request.getEmail());
-        if(accountToCheck != null && accountToCheck.getPassword().equals(request.getPassword())) {
+        if(accountToCheck != null && encoder.matches(request.getPassword(), accountToCheck.getPassword())) {
             //TODO: Generate token
             response.setStatus(true).setMessage("Generated Token");
             logger.info("Successful login, email: " + request.getEmail());
