@@ -6,6 +6,16 @@ stages:
     - buildImage
     - pushImage
 
+services:
+   - name: docker:dind
+     alias: thedockerhost
+
+variables:
+    DOCKER_HOST: tcp://thedockerhost:2375/
+    # Use the overlayfs driver for improved performance:
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+
 #Build stage
 buildAuthService:
     stage: build
