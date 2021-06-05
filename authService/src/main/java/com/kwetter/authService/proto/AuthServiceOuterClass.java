@@ -44,14 +44,9 @@ public final class AuthServiceOuterClass {
         getPasswordBytes();
 
     /**
-     * <code>optional int64 role = 4;</code>
+     * <code>optional bool is_admin = 4;</code>
      */
-    long getRole();
-
-    /**
-     * <code>optional int64 profile_id = 5;</code>
-     */
-    long getProfileId();
+    boolean getIsAdmin();
   }
   /**
    * Protobuf type {@code com.kwetter.authService.proto.Account}
@@ -68,8 +63,7 @@ public final class AuthServiceOuterClass {
       id_ = 0L;
       email_ = "";
       password_ = "";
-      role_ = 0L;
-      profileId_ = 0L;
+      isAdmin_ = false;
     }
 
     @java.lang.Override
@@ -116,12 +110,7 @@ public final class AuthServiceOuterClass {
             }
             case 32: {
 
-              role_ = input.readInt64();
-              break;
-            }
-            case 40: {
-
-              profileId_ = input.readInt64();
+              isAdmin_ = input.readBool();
               break;
             }
           }
@@ -224,22 +213,13 @@ public final class AuthServiceOuterClass {
       }
     }
 
-    public static final int ROLE_FIELD_NUMBER = 4;
-    private long role_;
+    public static final int IS_ADMIN_FIELD_NUMBER = 4;
+    private boolean isAdmin_;
     /**
-     * <code>optional int64 role = 4;</code>
+     * <code>optional bool is_admin = 4;</code>
      */
-    public long getRole() {
-      return role_;
-    }
-
-    public static final int PROFILE_ID_FIELD_NUMBER = 5;
-    private long profileId_;
-    /**
-     * <code>optional int64 profile_id = 5;</code>
-     */
-    public long getProfileId() {
-      return profileId_;
+    public boolean getIsAdmin() {
+      return isAdmin_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -263,11 +243,8 @@ public final class AuthServiceOuterClass {
       if (!getPasswordBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, password_);
       }
-      if (role_ != 0L) {
-        output.writeInt64(4, role_);
-      }
-      if (profileId_ != 0L) {
-        output.writeInt64(5, profileId_);
+      if (isAdmin_ != false) {
+        output.writeBool(4, isAdmin_);
       }
     }
 
@@ -286,13 +263,9 @@ public final class AuthServiceOuterClass {
       if (!getPasswordBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, password_);
       }
-      if (role_ != 0L) {
+      if (isAdmin_ != false) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(4, role_);
-      }
-      if (profileId_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(5, profileId_);
+          .computeBoolSize(4, isAdmin_);
       }
       memoizedSize = size;
       return size;
@@ -316,10 +289,8 @@ public final class AuthServiceOuterClass {
           .equals(other.getEmail());
       result = result && getPassword()
           .equals(other.getPassword());
-      result = result && (getRole()
-          == other.getRole());
-      result = result && (getProfileId()
-          == other.getProfileId());
+      result = result && (getIsAdmin()
+          == other.getIsAdmin());
       return result;
     }
 
@@ -337,12 +308,9 @@ public final class AuthServiceOuterClass {
       hash = (53 * hash) + getEmail().hashCode();
       hash = (37 * hash) + PASSWORD_FIELD_NUMBER;
       hash = (53 * hash) + getPassword().hashCode();
-      hash = (37 * hash) + ROLE_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getRole());
-      hash = (37 * hash) + PROFILE_ID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getProfileId());
+      hash = (37 * hash) + IS_ADMIN_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getIsAdmin());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -467,9 +435,7 @@ public final class AuthServiceOuterClass {
 
         password_ = "";
 
-        role_ = 0L;
-
-        profileId_ = 0L;
+        isAdmin_ = false;
 
         return this;
       }
@@ -496,8 +462,7 @@ public final class AuthServiceOuterClass {
         result.id_ = id_;
         result.email_ = email_;
         result.password_ = password_;
-        result.role_ = role_;
-        result.profileId_ = profileId_;
+        result.isAdmin_ = isAdmin_;
         onBuilt();
         return result;
       }
@@ -550,11 +515,8 @@ public final class AuthServiceOuterClass {
           password_ = other.password_;
           onChanged();
         }
-        if (other.getRole() != 0L) {
-          setRole(other.getRole());
-        }
-        if (other.getProfileId() != 0L) {
-          setProfileId(other.getProfileId());
+        if (other.getIsAdmin() != false) {
+          setIsAdmin(other.getIsAdmin());
         }
         onChanged();
         return this;
@@ -746,54 +708,28 @@ public final class AuthServiceOuterClass {
         return this;
       }
 
-      private long role_ ;
+      private boolean isAdmin_ ;
       /**
-       * <code>optional int64 role = 4;</code>
+       * <code>optional bool is_admin = 4;</code>
        */
-      public long getRole() {
-        return role_;
+      public boolean getIsAdmin() {
+        return isAdmin_;
       }
       /**
-       * <code>optional int64 role = 4;</code>
+       * <code>optional bool is_admin = 4;</code>
        */
-      public Builder setRole(long value) {
+      public Builder setIsAdmin(boolean value) {
         
-        role_ = value;
+        isAdmin_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int64 role = 4;</code>
+       * <code>optional bool is_admin = 4;</code>
        */
-      public Builder clearRole() {
+      public Builder clearIsAdmin() {
         
-        role_ = 0L;
-        onChanged();
-        return this;
-      }
-
-      private long profileId_ ;
-      /**
-       * <code>optional int64 profile_id = 5;</code>
-       */
-      public long getProfileId() {
-        return profileId_;
-      }
-      /**
-       * <code>optional int64 profile_id = 5;</code>
-       */
-      public Builder setProfileId(long value) {
-        
-        profileId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional int64 profile_id = 5;</code>
-       */
-      public Builder clearProfileId() {
-        
-        profileId_ = 0L;
+        isAdmin_ = false;
         onChanged();
         return this;
       }
@@ -4593,27 +4529,26 @@ public final class AuthServiceOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\021AuthService.proto\022\035com.kwetter.authSer" +
-      "vice.proto\"X\n\007Account\022\n\n\002id\030\001 \001(\003\022\r\n\005ema" +
-      "il\030\002 \001(\t\022\020\n\010password\030\003 \001(\t\022\014\n\004role\030\004 \001(\003" +
-      "\022\022\n\nprofile_id\030\005 \001(\003\"2\n\017RegisterRequest\022" +
-      "\r\n\005email\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\"l\n\020Regi" +
-      "sterResponse\022\016\n\006status\030\001 \001(\010\022\017\n\007message\030" +
-      "\002 \001(\t\0227\n\007account\030\003 \001(\0132&.com.kwetter.aut" +
-      "hService.proto.Account\"/\n\014LoginRequest\022\r" +
-      "\n\005email\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\"0\n\rLogin" +
-      "Response\022\016\n\006status\030\001 \001(\010\022\017\n\007message\030\002 \001(",
-      "\t\"\"\n\021ValidationRequest\022\r\n\005token\030\001 \001(\t\"5\n" +
-      "\022ValidationResponse\022\016\n\006status\030\001 \001(\010\022\017\n\007m" +
-      "essage\030\002 \001(\t2\324\002\n\013AuthService\022k\n\010Register" +
-      "\022..com.kwetter.authService.proto.Registe" +
-      "rRequest\032/.com.kwetter.authService.proto" +
-      ".RegisterResponse\022b\n\005Login\022+.com.kwetter" +
-      ".authService.proto.LoginRequest\032,.com.kw" +
-      "etter.authService.proto.LoginResponse\022t\n" +
-      "\rValidateToken\0220.com.kwetter.authService" +
-      ".proto.ValidationRequest\0321.com.kwetter.a",
-      "uthService.proto.ValidationResponseb\006pro" +
-      "to3"
+      "vice.proto\"H\n\007Account\022\n\n\002id\030\001 \001(\003\022\r\n\005ema" +
+      "il\030\002 \001(\t\022\020\n\010password\030\003 \001(\t\022\020\n\010is_admin\030\004" +
+      " \001(\010\"2\n\017RegisterRequest\022\r\n\005email\030\001 \001(\t\022\020" +
+      "\n\010password\030\002 \001(\t\"l\n\020RegisterResponse\022\016\n\006" +
+      "status\030\001 \001(\010\022\017\n\007message\030\002 \001(\t\0227\n\007account" +
+      "\030\003 \001(\0132&.com.kwetter.authService.proto.A" +
+      "ccount\"/\n\014LoginRequest\022\r\n\005email\030\001 \001(\t\022\020\n" +
+      "\010password\030\002 \001(\t\"0\n\rLoginResponse\022\016\n\006stat" +
+      "us\030\001 \001(\010\022\017\n\007message\030\002 \001(\t\"\"\n\021ValidationR",
+      "equest\022\r\n\005token\030\001 \001(\t\"5\n\022ValidationRespo" +
+      "nse\022\016\n\006status\030\001 \001(\010\022\017\n\007message\030\002 \001(\t2\324\002\n" +
+      "\013AuthService\022k\n\010Register\022..com.kwetter.a" +
+      "uthService.proto.RegisterRequest\032/.com.k" +
+      "wetter.authService.proto.RegisterRespons" +
+      "e\022b\n\005Login\022+.com.kwetter.authService.pro" +
+      "to.LoginRequest\032,.com.kwetter.authServic" +
+      "e.proto.LoginResponse\022t\n\rValidateToken\0220" +
+      ".com.kwetter.authService.proto.Validatio" +
+      "nRequest\0321.com.kwetter.authService.proto",
+      ".ValidationResponseb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4632,7 +4567,7 @@ public final class AuthServiceOuterClass {
     internal_static_com_kwetter_authService_proto_Account_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kwetter_authService_proto_Account_descriptor,
-        new java.lang.String[] { "Id", "Email", "Password", "Role", "ProfileId", });
+        new java.lang.String[] { "Id", "Email", "Password", "IsAdmin", });
     internal_static_com_kwetter_authService_proto_RegisterRequest_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_com_kwetter_authService_proto_RegisterRequest_fieldAccessorTable = new

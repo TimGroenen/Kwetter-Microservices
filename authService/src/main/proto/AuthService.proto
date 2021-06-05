@@ -12,8 +12,7 @@ message Account {
     int64 id = 1;
     string email = 2;
     string password = 3;
-    int64 role = 4;
-    int64 profile_id = 5;
+    bool is_admin = 4;
 }
 
 //Register
