@@ -7,7 +7,7 @@ stages:
     - pushImage
 
 services:
-   - name: docker:dind
+   - name: docker:18-dind
      alias: thedockerhost
 
 variables:
@@ -33,9 +33,7 @@ testAuthService:
 #Build docker image
 buildImageAuthService:
     stage: buildImage
-    image: docker:20.10.7-dind
-    tags: 
-        - shell
+    image: docker:18-dind
     script: 
         - cd authService
         - docker build . -t timgroenen/kwetterauthservice
@@ -43,9 +41,7 @@ buildImageAuthService:
 #push docker image to dockerhub
 pushImageAuthService:
     stage: pushImage
-    image: docker:20.10.7-dind
-    tags:
-        - shell
+    image: docker:18-dind
     script:
         - cd authService
         - docker login --username $dockerUsername --password $dockerPassword
