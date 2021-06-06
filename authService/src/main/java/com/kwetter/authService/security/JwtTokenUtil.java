@@ -62,8 +62,12 @@ public class JwtTokenUtil implements Serializable {
     }
 
     //validate token
-    public Boolean validateToken(String token, String email) {
-        final String username = getUsernameFromToken(token);
-        return (username.equals(email) && !isTokenExpired(token));
+    public Boolean validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+        } catch(Exception e) {
+            return false;
+        }
+        return true;
     }
 }
