@@ -34,6 +34,8 @@ testAuthService:
 buildImageAuthService:
     stage: buildImage
     image: docker:20.10.7-dind
+    tags: 
+        - shell
     script: 
         - cd authService
         - docker build . -t timgroenen/kwetterauthservice
@@ -42,6 +44,8 @@ buildImageAuthService:
 pushImageAuthService:
     stage: pushImage
     image: docker:20.10.7-dind
+    tags:
+        - shell
     script:
         - cd authService
         - docker login --username $dockerUsername --password $dockerPassword
