@@ -73,12 +73,12 @@ public class AuthService extends AuthServiceImplBase {
         //Validate token
         ValidationResponse.Builder response = ValidationResponse.newBuilder();
 
-        if(new JwtTokenUtil().validateToken(request.getToken(), request.getEmail())) {
+        if(new JwtTokenUtil().validateToken(request.getToken())) {
             response.setStatus(true).setMessage("Valid token");
-            logger.info("Token validated, email: " + request.getEmail());
+            logger.info("Token validated");
         } else {
             response.setStatus(false).setMessage("Invalid token");
-            logger.info("Invalid token, email: " + request.getEmail());
+            logger.info("Invalid token");
         }
 
         responseObserver.onNext(response.build());
