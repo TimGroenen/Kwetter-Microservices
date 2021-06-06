@@ -3,8 +3,7 @@ image: maven:3-jdk-11
 stages:
     - build
     - test
-    - buildImage
-    - pushImage
+    - buildPushImage
 
 services:
    - name: docker:18-dind
@@ -30,19 +29,12 @@ testAuthService:
         - cd authService
         - mvn test
 
-#Build docker image
+#Build and push docker image
 buildImageAuthService:
-    stage: buildImage
+    stage: buildPushImage
     image: docker:18-dind
     script: 
         - cd authService
         - docker build . -t timgroenen/kwetterauthservice
-
-#push docker image to dockerhub
-pushImageAuthService:
-    stage: pushImage
-    image: docker:18-dind
-    script:
-        - cd authService
         - docker login --username $dockerUsername --password $dockerPassword
         - docker push timgroenen/kwetterauthservice
