@@ -3,6 +3,7 @@ package com.kwetter.profileService.entities;
 import com.kwetter.profileService.proto.ProfileServiceOuterClass;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.List;
@@ -27,11 +28,12 @@ public class ProfileEntity {
 
     String website;
 
-    @OneToMany(mappedBy = "userFollowing")
-    List<FollowUserEntity> following;
+    //User 1 follows User 2, User 2 does not follow User 1
+    @OneToMany(mappedBy = "userFollowing", fetch=FetchType.EAGER) //User 1
+    List<FollowUserEntity> following; //Following these users
 
-    @OneToMany(mappedBy = "userFollowed")
-    List<FollowUserEntity> followed;
+    @OneToMany(mappedBy = "userFollowed", fetch=FetchType.EAGER) //User 2
+    List<FollowUserEntity> followed; //Followed by these users (followers)
 
     public ProfileEntity() {}
 

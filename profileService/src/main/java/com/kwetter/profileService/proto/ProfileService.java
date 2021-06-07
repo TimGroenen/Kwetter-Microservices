@@ -1,5 +1,6 @@
 package com.kwetter.profileService.proto;
 
+import com.kwetter.profileService.entities.FollowUserEntity;
 import com.kwetter.profileService.entities.ProfileEntity;
 import com.kwetter.profileService.proto.ProfileServiceGrpc.*;
 import com.kwetter.profileService.repository.FollowUserRepository;
@@ -11,6 +12,10 @@ import com.kwetter.profileService.proto.ProfileServiceOuterClass.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @GrpcService
 public class ProfileService extends ProfileServiceImplBase {
@@ -83,21 +88,77 @@ public class ProfileService extends ProfileServiceImplBase {
 
     @Override
     public void followUser(FollowUserRequest request, StreamObserver<SimpleResponse> responseObserver) {
-        throw new NotYetImplementedException();
+        SimpleResponse.Builder response = SimpleResponse.newBuilder();
+
+        //Check if both profiles exist
+        if(profileRepository.existsById(request.getUserFollowingId()) && profileRepository.existsById(request.getUserFollowedId())) {
+            //Check if follow already exists
+            if(!followUserRepository.existsByUserFollowingIdAndUserFollowedId(request.getUserFollowingId(), request.getUserFollowedId())) {
+                //Both profiles exist, add follow line to database
+                followUserRepository.save(
+                        new FollowUserEntity(
+                                profileRepository.getById(request.getUserFollowingId()),
+                                profileRepository.getById(request.getUserFollowedId())
+                        )
+                );
+                response.setStatus(true).setMessage("Success");
+            } else {
+                //Follow row already exists
+                response.setStatus(false).setMessage("User is already followed");
+            }
+        } else {
+            response.setStatus(false).setMessage("Profile does not exist");
+        }
+
+        responseObserver.onNext(response.build());
+        responseObserver.onCompleted();
     }
 
     @Override
     public void unfollowUser(FollowUserRequest request, StreamObserver<SimpleResponse> responseObserver) {
-        throw new NotYetImplementedException();
+        SimpleResponse.Builder response = SimpleResponse.newBuilder();
+
+        //Try to find row
+        FollowUserEntity result = followUserRepository.getByUserFollowingIdAndUserFollowedId(request.getUserFollowingId(), request.getUserFollowedId());
+
+        if (result != null) {
+            //Delete the row
+            followUserRepository.delete(result);
+            response.setStatus(true).setMessage("Success");
+        } else {
+            //User is not followed
+            response.setStatus(false).setMessage("User is not followed");
+        }
+
+        responseObserver.onNext(response.build());
+        responseObserver.onCompleted();
     }
 
     @Override
     public void getFollowed(GetByProfileIdRequest request, StreamObserver<ProfilesResponse> responseObserver) {
-        throw new NotYetImplementedException();
+        ProfilesResponse.Builder response = ProfilesResponse.newBuilder();
+
+        ProfileEntity profile = profileRepository.getById(request.getProfileId());
+
+        for (FollowUserEntity f: profile.getFollowing()) {
+            response.addProfiles(f.getUserFollowed().toProfileClass());
+        }
+
+        responseObserver.onNext(response.build());
+        responseObserver.onCompleted();
     }
 
     @Override
     public void getFollowers(GetByProfileIdRequest request, StreamObserver<ProfilesResponse> responseObserver) {
-        throw new NotYetImplementedException();
+        ProfilesResponse.Builder response = ProfilesResponse.newBuilder();
+
+        ProfileEntity profile = profileRepository.getById(request.getProfileId());
+
+        for (FollowUserEntity f: profile.getFollowed()) {
+            response.addProfiles(f.getUserFollowing().toProfileClass());
+        }
+
+        responseObserver.onNext(response.build());
+        responseObserver.onCompleted();
     }
 }

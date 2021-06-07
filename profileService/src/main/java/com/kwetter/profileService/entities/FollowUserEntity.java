@@ -14,13 +14,14 @@ public class FollowUserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
+    //User 1 follows User 2, User 2 does not follow User 1
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="userFollowingId", nullable=false)
-    ProfileEntity userFollowing;
+    ProfileEntity userFollowing; //User 1
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="userFollowedId", nullable=false)
-    ProfileEntity userFollowed;
+    ProfileEntity userFollowed; //User 2
 
     public FollowUserEntity() {}
 
