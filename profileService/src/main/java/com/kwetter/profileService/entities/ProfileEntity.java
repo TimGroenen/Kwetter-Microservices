@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Profile")
@@ -25,6 +26,12 @@ public class ProfileEntity {
     String location;
 
     String website;
+
+    @OneToMany(mappedBy = "userFollowing")
+    List<FollowUserEntity> following;
+
+    @OneToMany(mappedBy = "userFollowed")
+    List<FollowUserEntity> followed;
 
     public ProfileEntity() {}
 
