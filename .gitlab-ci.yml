@@ -22,11 +22,23 @@ buildAuthService:
         - cd authService
         - mvn package -Dmaven.test.skip=true
 
+buildProfileService:
+    stage: build
+    script:
+        - cd profileService
+        - mvn package -Dmaven.test.skip=true
+
 #Test stage
 testAuthService:
     stage: test
     script:
         - cd authService
+        - mvn test
+
+testProfileService:
+    stage: test
+    script:
+        - cd profileService
         - mvn test
 
 #Build and push docker image
