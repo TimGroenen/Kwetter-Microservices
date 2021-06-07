@@ -11,12 +11,18 @@ buildAuthService:
     script:
         - cd authService
         - mvn package -Dmaven.test.skip=true
+    only:
+        changes:
+            - authService/**/*
 
 buildProfileService:
     stage: build
     script:
         - cd profileService
         - mvn package -Dmaven.test.skip=true
+    only:
+        changes:
+            - profileService/**/*
 
 #Test stage
 testAuthService:
@@ -27,6 +33,9 @@ testAuthService:
     script:
         - cd authService
         - mvn test
+    only:
+        changes:
+            - authService/**/*
 
 testProfileService:
     stage: test
@@ -36,6 +45,9 @@ testProfileService:
     script:
         - cd profileService
         - mvn test
+    only:
+        changes:
+            - profileService/**/*
 
 #Build and push docker image
 imageAuthService:
@@ -55,3 +67,6 @@ imageAuthService:
         - docker build . -t timgroenen/kwetterauthservice
         - docker login --username $dockerUsername --password $dockerPassword
         - docker push timgroenen/kwetterauthservice
+    only:
+        changes:
+            - authService/**/*
