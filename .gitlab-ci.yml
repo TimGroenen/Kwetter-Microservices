@@ -5,15 +5,15 @@ stages:
     - test
     - image
 
-services:
-   - name: docker:18-dind
-     alias: thedockerhost
+#services:
+#   - name: docker:18-dind
+#     alias: thedockerhost
 
-variables:
-    DOCKER_HOST: tcp://thedockerhost:2375/
-    # Use the overlayfs driver for improved performance:
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
+#variables:
+#    DOCKER_HOST: tcp://thedockerhost:2375/
+#    # Use the overlayfs driver for improved performance:
+#    DOCKER_DRIVER: overlay2
+#    DOCKER_TLS_CERTDIR: ""
 
 #Build stage
 buildAuthService:
@@ -48,6 +48,14 @@ imageAuthService:
     stage: image
     image: docker:18-dind
     needs: ["testAuthService"]
+    services:
+        - name: docker:18-dind
+          alias: thedockerhost
+    variables:
+        DOCKER_HOST: tcp://thedockerhost:2375/
+        # Use the overlayfs driver for improved performance:
+        DOCKER_DRIVER: overlay2
+        DOCKER_TLS_CERTDIR: ""
     script: 
         - cd authService
         - docker build . -t timgroenen/kwetterauthservice
