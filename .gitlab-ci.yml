@@ -11,35 +11,31 @@ buildAuthService:
     script:
         - cd authService
         - mvn package -Dmaven.test.skip=true
-    artifacts:
-        paths:
-            - target
-        expire_in: 20 mins
 
 buildProfileService:
     stage: build
     script:
         - cd profileService
         - mvn package -Dmaven.test.skip=true
-    artifacts:
-        paths:
-            - target
-        expire_in: 20 mins
 
 #Test stage
 testAuthService:
     stage: test
     needs: ["buildAuthService"]
+    dependencies:
+        - buildAuthService
     script:
         - cd authService
-        - mvn surefire:test
+        - mvn test
 
 testProfileService:
     stage: test
     needs: ["buildProfileService"]
+    dependencies:
+        - buildProfileService
     script:
         - cd profileService
-        - mvn surefire:test
+        - mvn test
 
 #Build and push docker image
 imageAuthService:
