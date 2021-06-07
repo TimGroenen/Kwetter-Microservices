@@ -3,7 +3,7 @@ image: maven:3-jdk-11
 stages:
     - build
     - test
-    - buildPushImage
+    - image
 
 services:
    - name: docker:18-dind
@@ -30,8 +30,8 @@ testAuthService:
         - mvn test
 
 #Build and push docker image
-buildImageAuthService:
-    stage: buildPushImage
+imageAuthService:
+    stage: image
     image: docker:18-dind
     script: 
         - cd authService
