@@ -5,28 +5,26 @@ stages:
     - test
     - image
 
-#services:
-#   - name: docker:18-dind
-#     alias: thedockerhost
-
-#variables:
-#    DOCKER_HOST: tcp://thedockerhost:2375/
-#    # Use the overlayfs driver for improved performance:
-#    DOCKER_DRIVER: overlay2
-#    DOCKER_TLS_CERTDIR: ""
-
 #Build stage
 buildAuthService:
     stage: build
     script:
         - cd authService
         - mvn package -Dmaven.test.skip=true
+    artifacts:
+        paths:
+            - target
+        expire_in: 20 mins
 
 buildProfileService:
     stage: build
     script:
         - cd profileService
         - mvn package -Dmaven.test.skip=true
+    artifacts:
+        paths:
+            - target
+        expire_in: 20 mins
 
 #Test stage
 testAuthService:
@@ -34,14 +32,14 @@ testAuthService:
     needs: ["buildAuthService"]
     script:
         - cd authService
-        - mvn test
+        - mvn surefire:test
 
 testProfileService:
     stage: test
     needs: ["buildProfileService"]
     script:
         - cd profileService
-        - mvn test
+        - mvn surefire:test
 
 #Build and push docker image
 imageAuthService:
