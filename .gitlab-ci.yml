@@ -31,12 +31,14 @@ buildProfileService:
 #Test stage
 testAuthService:
     stage: test
+    needs: ["buildAuthService"]
     script:
         - cd authService
         - mvn test
 
 testProfileService:
     stage: test
+    needs: ["buildProfileService"]
     script:
         - cd profileService
         - mvn test
@@ -45,6 +47,7 @@ testProfileService:
 imageAuthService:
     stage: image
     image: docker:18-dind
+    needs: ["testAuthService"]
     script: 
         - cd authService
         - docker build . -t timgroenen/kwetterauthservice
