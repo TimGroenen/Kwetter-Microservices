@@ -84,4 +84,22 @@ public class AuthService extends AuthServiceImplBase {
         responseObserver.onNext(response.build());
         responseObserver.onCompleted();
     }
+
+    @Override
+    public void getAccountByEmail(EmailRequest request, StreamObserver<RegisterResponse> responseObserver) {
+        RegisterResponse.Builder response = RegisterResponse.newBuilder();
+
+        AccountEntity entity = repository.findAccountEntityByEmail(request.getEmail());
+
+        if(entity != null) {
+            response.setStatus(true).setMessage("Success").setAccount(entity.toAccountClass());
+            logger.info("Found account by email");
+        } else {
+            response.setStatus(false).setMessage("Account not found");
+            logger.info("Account not found");
+        }
+
+        responseObserver.onNext(response.build());
+        responseObserver.onCompleted();
+    }
 }
