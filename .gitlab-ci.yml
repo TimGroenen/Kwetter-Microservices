@@ -70,3 +70,24 @@ imageAuthService:
     only:
         changes:
             - authService/**/*
+
+imageProfileService:
+    stage: image
+    image: docker:18-dind
+    needs: ["testProfileService"]
+    services:
+        - name: docker:18-dind
+          alias: thedockerhost
+    variables:
+        DOCKER_HOST: tcp://thedockerhost:2375/
+        # Use the overlayfs driver for improved performance:
+        DOCKER_DRIVER: overlay2
+        DOCKER_TLS_CERTDIR: ""
+    script: 
+        - cd profileService
+        - docker build . -t timgroenen/kwetterprofileservice
+        - docker login --username $dockerUsername --password $dockerPassword
+        - docker push timgroenen/kwetterprofileservice
+    only:
+        changes:
+            - profileService/**/*
