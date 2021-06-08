@@ -58,7 +58,7 @@ public class ProfileService extends ProfileServiceImplBase {
             ProfileEntity entity = new ProfileEntity(request.getProfile());
 
             if(profileRepository.existsById(entity.getId())) {
-                response.setProfile(profileRepository.save(entity).toProfileClass());
+                response.setStatus(true).setMessage("Success").setProfile(profileRepository.save(entity).toProfileClass());
             } else {
                 response.setStatus(false).setMessage("Profile with id does not exist");
             }
