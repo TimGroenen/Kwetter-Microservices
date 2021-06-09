@@ -71,6 +71,22 @@ public class ProfileService extends ProfileServiceImplBase {
     }
 
     @Override
+    public void getProfileById(GetByProfileIdRequest request, StreamObserver<ProfileResponse> responseObserver) {
+        ProfileResponse.Builder response = ProfileResponse.newBuilder();
+
+        ProfileEntity entity = profileRepository.getById(request.getProfileId());
+
+        if(entity == null) {
+            response.setStatus(false).setMessage("Profile not found");
+        } else {
+            response.setProfile(entity.toProfileClass()).setStatus(true).setMessage("Success");
+        }
+
+        responseObserver.onNext(response.build());
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void getProfileByUserId(GetProfileByUserIdRequest request, StreamObserver<ProfileResponse> responseObserver) {
         ProfileResponse.Builder response = ProfileResponse.newBuilder();
 

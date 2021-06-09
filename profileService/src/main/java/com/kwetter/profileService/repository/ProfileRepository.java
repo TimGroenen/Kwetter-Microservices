@@ -11,4 +11,5 @@ public interface ProfileRepository extends JpaRepository<ProfileEntity, Long> {
     boolean existsByAccountId(Long id);
     boolean existsById(Long id);
     ProfileEntity getByAccountId(Long id);
+    ProfileEntity getById(Long id);
 }
