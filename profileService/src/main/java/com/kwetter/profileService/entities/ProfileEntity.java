@@ -1,5 +1,6 @@
 package com.kwetter.profileService.entities;
 
+import com.google.protobuf.ByteString;
 import com.kwetter.profileService.proto.ProfileServiceOuterClass;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,9 @@ public class ProfileEntity {
 
     String website;
 
+    @Lob
+    byte[] image;
+
     //User 1 follows User 2, User 2 does not follow User 1
     @OneToMany(mappedBy = "userFollowing", fetch=FetchType.EAGER) //User 1
     List<FollowUserEntity> following; //Following these users
@@ -44,6 +48,7 @@ public class ProfileEntity {
         this.bio = profile.getBio();
         this.location = profile.getLocation();
         this.website = profile.getWebsite();
+        this.image = profile.getImage().toByteArray();
     }
 
     public ProfileServiceOuterClass.Profile toProfileClass() {
@@ -54,6 +59,7 @@ public class ProfileEntity {
                 .setName(name)
                 .setLocation(location)
                 .setWebsite(website)
+                .setImage(ByteString.copyFrom(image))
                 .build();
     }
 }

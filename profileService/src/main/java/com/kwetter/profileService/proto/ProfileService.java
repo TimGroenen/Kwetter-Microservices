@@ -7,15 +7,10 @@ import com.kwetter.profileService.repository.FollowUserRepository;
 import com.kwetter.profileService.repository.ProfileRepository;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
-import org.hibernate.cfg.NotYetImplementedException;
 import com.kwetter.profileService.proto.ProfileServiceOuterClass.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @GrpcService
 public class ProfileService extends ProfileServiceImplBase {
@@ -43,6 +38,7 @@ public class ProfileService extends ProfileServiceImplBase {
             profileEntity.setBio("");
             profileEntity.setLocation("");
             profileEntity.setWebsite("");
+            profileEntity.setImage(new byte[0]);
             logger.info("New profile with name: " + profileEntity.getName() + ", created");
             response.setProfile(profileRepository.save(profileEntity).toProfileClass()).setStatus(true).setMessage("Success");
         }

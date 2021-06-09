@@ -43,6 +43,7 @@ class ProfileServiceApplicationTests {
 		entity.setBio("");
 		entity.setLocation("");
 		entity.setWebsite("");
+		entity.setImage(new byte[0]);
 		followEntity = new FollowUserEntity(entity, entity);
 	}
 
