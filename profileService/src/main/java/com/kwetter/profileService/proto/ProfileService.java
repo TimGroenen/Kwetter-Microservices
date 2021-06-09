@@ -43,6 +43,7 @@ public class ProfileService extends ProfileServiceImplBase {
             profileEntity.setBio("");
             profileEntity.setLocation("");
             profileEntity.setWebsite("");
+            logger.info("New profile with name: " + profileEntity.getName() + ", created");
             response.setProfile(profileRepository.save(profileEntity).toProfileClass()).setStatus(true).setMessage("Success");
         }
 
@@ -58,6 +59,7 @@ public class ProfileService extends ProfileServiceImplBase {
             ProfileEntity entity = new ProfileEntity(request.getProfile());
 
             if(profileRepository.existsById(entity.getId())) {
+                logger.info("Profile with name: " + entity.getName() + ", updated");
                 response.setStatus(true).setMessage("Success").setProfile(profileRepository.save(entity).toProfileClass());
             } else {
                 response.setStatus(false).setMessage("Profile with id does not exist");
@@ -77,8 +79,10 @@ public class ProfileService extends ProfileServiceImplBase {
         ProfileEntity entity = profileRepository.getById(request.getProfileId());
 
         if(entity == null) {
+            logger.info("Profile not found");
             response.setStatus(false).setMessage("Profile not found");
         } else {
+            logger.info("Found profile with name: " + entity.getName());
             response.setProfile(entity.toProfileClass()).setStatus(true).setMessage("Success");
         }
 
@@ -93,8 +97,10 @@ public class ProfileService extends ProfileServiceImplBase {
         ProfileEntity entity = profileRepository.getByAccountId(request.getUserId());
 
         if(entity == null) {
+            logger.info("Profile not found");
             response.setStatus(false).setMessage("Profile not found");
         } else {
+            logger.info("Found profile with name: " + entity.getName());
             response.setProfile(entity.toProfileClass()).setStatus(true).setMessage("Success");
         }
 
@@ -120,9 +126,11 @@ public class ProfileService extends ProfileServiceImplBase {
                 response.setStatus(true).setMessage("Success");
             } else {
                 //Follow row already exists
+                logger.info("User is already followed");
                 response.setStatus(false).setMessage("User is already followed");
             }
         } else {
+            logger.info("Profile not found");
             response.setStatus(false).setMessage("Profile does not exist");
         }
 
@@ -143,6 +151,7 @@ public class ProfileService extends ProfileServiceImplBase {
             response.setStatus(true).setMessage("Success");
         } else {
             //User is not followed
+            logger.info("User is not followed");
             response.setStatus(false).setMessage("User is not followed");
         }
 
@@ -160,6 +169,7 @@ public class ProfileService extends ProfileServiceImplBase {
             response.addProfiles(f.getUserFollowed().toProfileClass());
         }
 
+        logger.info("Returning followed for ProfileId: " + request.getProfileId());
         responseObserver.onNext(response.build());
         responseObserver.onCompleted();
     }
@@ -174,6 +184,7 @@ public class ProfileService extends ProfileServiceImplBase {
             response.addProfiles(f.getUserFollowing().toProfileClass());
         }
 
+        logger.info("Returning followers for ProfileId: " + request.getProfileId());
         responseObserver.onNext(response.build());
         responseObserver.onCompleted();
     }
