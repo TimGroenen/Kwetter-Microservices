@@ -31,6 +31,8 @@ public class ProfileEntity {
 
     @Lob
     byte[] image;
+    String imageName;
+    String imageType;
 
     //User 1 follows User 2, User 2 does not follow User 1
     @OneToMany(mappedBy = "userFollowing", fetch=FetchType.EAGER) //User 1
@@ -49,6 +51,8 @@ public class ProfileEntity {
         this.location = profile.getLocation();
         this.website = profile.getWebsite();
         this.image = profile.getImage().toByteArray();
+        this.imageName = profile.getImageName();
+        this.imageType = profile.getImageType();
     }
 
     public ProfileServiceOuterClass.Profile toProfileClass() {
@@ -60,6 +64,8 @@ public class ProfileEntity {
                 .setLocation(location)
                 .setWebsite(website)
                 .setImage(ByteString.copyFrom(image))
+                .setImageName(imageName)
+                .setImageType(imageType)
                 .build();
     }
 }

@@ -44,6 +44,8 @@ class ProfileServiceApplicationTests {
 		entity.setLocation("");
 		entity.setWebsite("");
 		entity.setImage(new byte[0]);
+		entity.setImageName("Image");
+		entity.setImageType("png");
 		followEntity = new FollowUserEntity(entity, entity);
 	}
 

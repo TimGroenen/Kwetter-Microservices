@@ -30,6 +30,8 @@ message Profile {
     string location = 5;
     string website = 6;
     bytes image = 7;
+    string image_name = 8;
+    string image_type = 9;
 }
 
 message SimpleResponse {
