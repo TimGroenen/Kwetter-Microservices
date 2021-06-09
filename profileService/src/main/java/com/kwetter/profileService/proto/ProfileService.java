@@ -38,7 +38,6 @@ public class ProfileService extends ProfileServiceImplBase {
             profileEntity.setBio("");
             profileEntity.setLocation("");
             profileEntity.setWebsite("");
-            profileEntity.setImage(new byte[0]);
             logger.info("New profile with name: " + profileEntity.getName() + ", created");
             response.setProfile(profileRepository.save(profileEntity).toProfileClass()).setStatus(true).setMessage("Success");
         }
