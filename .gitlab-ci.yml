@@ -24,6 +24,15 @@ buildProfileService:
         changes:
             - profileService/**/*
 
+buildMessageService:
+    stage: build
+    script:
+        - cd messageService
+        - mvn package -Dmaven.test.skip=true
+    only:
+        changes:
+            - messageService/**/*
+
 #Test stage
 testAuthService:
     stage: test
@@ -48,6 +57,18 @@ testProfileService:
     only:
         changes:
             - profileService/**/*
+
+testMessageService:
+    stage: test
+    needs: ["buildMessageService"]
+    dependencies:
+        - buildMessageService
+    script:
+        - cd messageService
+        - mvn test
+    only:
+        changes:
+            - messageService/**/*
 
 #Build and push docker image
 imageAuthService:
