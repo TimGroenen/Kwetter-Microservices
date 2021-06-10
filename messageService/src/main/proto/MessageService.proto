@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package com.kwetter.messageService.proto;
+
+service MessageService {
+    //Create new message
+    rpc CreateNewTweet(NewMessageRequest) returns (SimpleResponse);
+    //Edit message
+    rpc EditTweet(EditMessageRequest) returns (TweetResponse);
+    //Get messages by ids
+    rpc GetTweetsByProfileIds(TweetsByProfileRequest) returns (TweetsResponse);
+}
+
+message Tweet {
+    int64 id = 1;
+    int64 profile_id = 2;
+    string content = 3;
+    int32 likes = 4;
+    bool is_liked = 5;
+}
+
+message TweetsResponse {
+    repeated Tweet tweets = 1;
+}
+
+message NewMessageRequest {
+    int64 profile_id = 1;
+    string content = 2;
+}
+
+message SimpleResponse {
+    bool status = 1;
+    string message = 2;
+}
+
+message EditMessageRequest {
+    Tweet tweet = 1;
+}
+
+message TweetResponse {
+    bool status = 1;
+    string message = 2;
+    Tweet tweet = 3;
+}
+
+message TweetsByProfileRequest {
+    repeated int64 profile_ids = 1;
+}
