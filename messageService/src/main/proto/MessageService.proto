@@ -52,6 +52,7 @@ message TweetResponse {
 
 message TweetsByProfileRequest {
     repeated int64 profile_ids = 1;
+    int64 profile_id = 2;
 }
 
 message LikeTweetRequest {

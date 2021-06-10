@@ -4042,6 +4042,11 @@ public final class MessageServiceOuterClass {
      * <code>repeated int64 profile_ids = 1;</code>
      */
     long getProfileIds(int index);
+
+    /**
+     * <code>optional int64 profile_id = 2;</code>
+     */
+    long getProfileId();
   }
   /**
    * Protobuf type {@code com.kwetter.messageService.proto.TweetsByProfileRequest}
@@ -4056,6 +4061,7 @@ public final class MessageServiceOuterClass {
     }
     private TweetsByProfileRequest() {
       profileIds_ = java.util.Collections.emptyList();
+      profileId_ = 0L;
     }
 
     @java.lang.Override
@@ -4104,6 +4110,11 @@ public final class MessageServiceOuterClass {
               input.popLimit(limit);
               break;
             }
+            case 16: {
+
+              profileId_ = input.readInt64();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -4130,6 +4141,7 @@ public final class MessageServiceOuterClass {
               com.kwetter.messageService.proto.MessageServiceOuterClass.TweetsByProfileRequest.class, com.kwetter.messageService.proto.MessageServiceOuterClass.TweetsByProfileRequest.Builder.class);
     }
 
+    private int bitField0_;
     public static final int PROFILE_IDS_FIELD_NUMBER = 1;
     private java.util.List<java.lang.Long> profileIds_;
     /**
@@ -4153,6 +4165,15 @@ public final class MessageServiceOuterClass {
     }
     private int profileIdsMemoizedSerializedSize = -1;
 
+    public static final int PROFILE_ID_FIELD_NUMBER = 2;
+    private long profileId_;
+    /**
+     * <code>optional int64 profile_id = 2;</code>
+     */
+    public long getProfileId() {
+      return profileId_;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -4172,6 +4193,9 @@ public final class MessageServiceOuterClass {
       }
       for (int i = 0; i < profileIds_.size(); i++) {
         output.writeInt64NoTag(profileIds_.get(i));
+      }
+      if (profileId_ != 0L) {
+        output.writeInt64(2, profileId_);
       }
     }
 
@@ -4194,6 +4218,10 @@ public final class MessageServiceOuterClass {
         }
         profileIdsMemoizedSerializedSize = dataSize;
       }
+      if (profileId_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(2, profileId_);
+      }
       memoizedSize = size;
       return size;
     }
@@ -4212,6 +4240,8 @@ public final class MessageServiceOuterClass {
       boolean result = true;
       result = result && getProfileIdsList()
           .equals(other.getProfileIdsList());
+      result = result && (getProfileId()
+          == other.getProfileId());
       return result;
     }
 
@@ -4226,6 +4256,9 @@ public final class MessageServiceOuterClass {
         hash = (37 * hash) + PROFILE_IDS_FIELD_NUMBER;
         hash = (53 * hash) + getProfileIdsList().hashCode();
       }
+      hash = (37 * hash) + PROFILE_ID_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getProfileId());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -4346,6 +4379,8 @@ public final class MessageServiceOuterClass {
         super.clear();
         profileIds_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000001);
+        profileId_ = 0L;
+
         return this;
       }
 
@@ -4369,11 +4404,14 @@ public final class MessageServiceOuterClass {
       public com.kwetter.messageService.proto.MessageServiceOuterClass.TweetsByProfileRequest buildPartial() {
         com.kwetter.messageService.proto.MessageServiceOuterClass.TweetsByProfileRequest result = new com.kwetter.messageService.proto.MessageServiceOuterClass.TweetsByProfileRequest(this);
         int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           profileIds_ = java.util.Collections.unmodifiableList(profileIds_);
           bitField0_ = (bitField0_ & ~0x00000001);
         }
         result.profileIds_ = profileIds_;
+        result.profileId_ = profileId_;
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -4424,6 +4462,9 @@ public final class MessageServiceOuterClass {
             profileIds_.addAll(other.profileIds_);
           }
           onChanged();
+        }
+        if (other.getProfileId() != 0L) {
+          setProfileId(other.getProfileId());
         }
         onChanged();
         return this;
@@ -4514,6 +4555,32 @@ public final class MessageServiceOuterClass {
       public Builder clearProfileIds() {
         profileIds_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+
+      private long profileId_ ;
+      /**
+       * <code>optional int64 profile_id = 2;</code>
+       */
+      public long getProfileId() {
+        return profileId_;
+      }
+      /**
+       * <code>optional int64 profile_id = 2;</code>
+       */
+      public Builder setProfileId(long value) {
+        
+        profileId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int64 profile_id = 2;</code>
+       */
+      public Builder clearProfileId() {
+        
+        profileId_ = 0L;
         onChanged();
         return this;
       }
@@ -5122,28 +5189,28 @@ public final class MessageServiceOuterClass {
       "Service.proto.Tweet\"h\n\rTweetResponse\022\016\n\006" +
       "status\030\001 \001(\010\022\017\n\007message\030\002 \001(\t\0226\n\005tweet\030\003" +
       " \001(\0132\'.com.kwetter.messageService.proto." +
-      "Tweet\"-\n\026TweetsByProfileRequest\022\023\n\013profi" +
-      "le_ids\030\001 \003(\003\"8\n\020LikeTweetRequest\022\020\n\010twee" +
-      "t_id\030\001 \001(\003\022\022\n\nprofile_id\030\002 \001(\0032\322\005\n\016Messa" +
-      "geService\022u\n\016CreateNewTweet\0221.com.kwette" +
-      "r.messageService.proto.NewTweetRequest\0320" +
-      ".com.kwetter.messageService.proto.Simple" +
-      "Response\022p\n\tEditTweet\0222.com.kwetter.mess",
-      "ageService.proto.EditTweetRequest\032/.com." +
-      "kwetter.messageService.proto.TweetRespon" +
-      "se\022s\n\013DeleteTweet\0222.com.kwetter.messageS" +
-      "ervice.proto.LikeTweetRequest\0320.com.kwet" +
-      "ter.messageService.proto.SimpleResponse\022" +
-      "\203\001\n\025GetTweetsByProfileIds\0228.com.kwetter." +
-      "messageService.proto.TweetsByProfileRequ" +
-      "est\0320.com.kwetter.messageService.proto.T" +
-      "weetsResponse\022l\n\004Like\0222.com.kwetter.mess" +
-      "ageService.proto.LikeTweetRequest\0320.com.",
-      "kwetter.messageService.proto.SimpleRespo" +
-      "nse\022n\n\006Unlike\0222.com.kwetter.messageServi" +
-      "ce.proto.LikeTweetRequest\0320.com.kwetter." +
-      "messageService.proto.SimpleResponseb\006pro" +
-      "to3"
+      "Tweet\"A\n\026TweetsByProfileRequest\022\023\n\013profi" +
+      "le_ids\030\001 \003(\003\022\022\n\nprofile_id\030\002 \001(\003\"8\n\020Like" +
+      "TweetRequest\022\020\n\010tweet_id\030\001 \001(\003\022\022\n\nprofil" +
+      "e_id\030\002 \001(\0032\322\005\n\016MessageService\022u\n\016CreateN" +
+      "ewTweet\0221.com.kwetter.messageService.pro" +
+      "to.NewTweetRequest\0320.com.kwetter.message" +
+      "Service.proto.SimpleResponse\022p\n\tEditTwee",
+      "t\0222.com.kwetter.messageService.proto.Edi" +
+      "tTweetRequest\032/.com.kwetter.messageServi" +
+      "ce.proto.TweetResponse\022s\n\013DeleteTweet\0222." +
+      "com.kwetter.messageService.proto.LikeTwe" +
+      "etRequest\0320.com.kwetter.messageService.p" +
+      "roto.SimpleResponse\022\203\001\n\025GetTweetsByProfi" +
+      "leIds\0228.com.kwetter.messageService.proto" +
+      ".TweetsByProfileRequest\0320.com.kwetter.me" +
+      "ssageService.proto.TweetsResponse\022l\n\004Lik" +
+      "e\0222.com.kwetter.messageService.proto.Lik",
+      "eTweetRequest\0320.com.kwetter.messageServi" +
+      "ce.proto.SimpleResponse\022n\n\006Unlike\0222.com." +
+      "kwetter.messageService.proto.LikeTweetRe" +
+      "quest\0320.com.kwetter.messageService.proto" +
+      ".SimpleResponseb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -5198,7 +5265,7 @@ public final class MessageServiceOuterClass {
     internal_static_com_kwetter_messageService_proto_TweetsByProfileRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kwetter_messageService_proto_TweetsByProfileRequest_descriptor,
-        new java.lang.String[] { "ProfileIds", });
+        new java.lang.String[] { "ProfileIds", "ProfileId", });
     internal_static_com_kwetter_messageService_proto_LikeTweetRequest_descriptor =
       getDescriptor().getMessageTypes().get(7);
     internal_static_com_kwetter_messageService_proto_LikeTweetRequest_fieldAccessorTable = new
