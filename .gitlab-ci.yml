@@ -112,3 +112,24 @@ imageProfileService:
     only:
         changes:
             - profileService/**/*
+
+imageMessageService:
+    stage: image
+    image: docker:18-dind
+    needs: ["testMessageService"]
+    services:
+        - name: docker:18-dind
+          alias: thedockerhost
+    variables:
+        DOCKER_HOST: tcp://thedockerhost:2375/
+        # Use the overlayfs driver for improved performance:
+        DOCKER_DRIVER: overlay2
+        DOCKER_TLS_CERTDIR: ""
+    script: 
+        - cd messageService
+        - docker build . -t timgroenen/kwettermessageService
+        - docker login --username $dockerUsername --password $dockerPassword
+        - docker push timgroenen/kwettermessageService
+    only:
+        changes:
+            - messageService/**/*
