@@ -127,9 +127,9 @@ imageMessageService:
         DOCKER_TLS_CERTDIR: ""
     script: 
         - cd messageService
-        - docker build . -t timgroenen/kwettermessageService
+        - docker build . -t timgroenen/kwettermessageservice
         - docker login --username $dockerUsername --password $dockerPassword
-        - docker push timgroenen/kwettermessageService
+        - docker push timgroenen/kwettermessageservice
     only:
         changes:
             - messageService/**/*
