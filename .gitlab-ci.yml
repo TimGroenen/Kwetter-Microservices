@@ -33,6 +33,15 @@ buildMessageService:
         changes:
             - messageService/**/*
 
+buildLoggingService:
+    stage: build
+    script:
+        - cd loggingService
+        - mvn package -Dmaven.test.skip=true
+    only:
+        changes:
+            - loggingService/**/*
+
 #Test stage
 testAuthService:
     stage: test
@@ -69,6 +78,18 @@ testMessageService:
     only:
         changes:
             - messageService/**/*
+
+testLoggingService:
+    stage: test
+    needs: ["buildLoggingService"]
+    dependencies:
+        - buildLoggingService
+    script:
+        - cd loggingService
+        - mvn test
+    only:
+        changes:
+            - loggingService/**/*
 
 #Build and push docker image
 imageAuthService:
@@ -133,3 +154,24 @@ imageMessageService:
     only:
         changes:
             - messageService/**/*
+
+imageLoggingService:
+    stage: image
+    image: docker:18-dind
+    needs: ["testLoggingService"]
+    services:
+        - name: docker:18-dind
+          alias: thedockerhost
+    variables:
+        DOCKER_HOST: tcp://thedockerhost:2375/
+        # Use the overlayfs driver for improved performance:
+        DOCKER_DRIVER: overlay2
+        DOCKER_TLS_CERTDIR: ""
+    script: 
+        - cd loggingService
+        - docker build . -t timgroenen/kwetterloggingservice
+        - docker login --username $dockerUsername --password $dockerPassword
+        - docker push timgroenen/kwetterloggingservice
+    only:
+        changes:
+            - loggingService/**/*
