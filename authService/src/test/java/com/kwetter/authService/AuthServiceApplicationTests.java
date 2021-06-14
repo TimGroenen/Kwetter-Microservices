@@ -1,6 +1,7 @@
 package com.kwetter.authService;
 
 import com.kwetter.authService.entity.AccountEntity;
+import com.kwetter.authService.kafka.KafkaSender;
 import com.kwetter.authService.proto.AuthService;
 import com.kwetter.authService.proto.AuthServiceOuterClass;
 import com.kwetter.authService.proto.AuthServiceOuterClass.LoginRequest;
@@ -24,10 +25,12 @@ class AuthServiceApplicationTests {
 
     @Mock
     private AccountRepository mockRepo;
+    @Mock
+    private KafkaSender kafkaSender;
 
     @BeforeEach
     public void setup() {
-        service = new AuthService(mockRepo);
+        service = new AuthService(mockRepo, kafkaSender);
     }
 
     @Test

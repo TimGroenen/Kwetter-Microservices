@@ -1,14 +1,14 @@
 package com.kwetter.authService.proto;
 
 import com.kwetter.authService.entity.AccountEntity;
+import com.kwetter.authService.kafka.KafkaSender;
+import com.kwetter.authService.kafka.message.KafkaLoggingType;
 import com.kwetter.authService.repository.AccountRepository;
 import com.kwetter.authService.security.JwtTokenUtil;
 import io.grpc.stub.StreamObserver;
 import com.kwetter.authService.proto.AuthServiceGrpc.AuthServiceImplBase;
 import com.kwetter.authService.proto.AuthServiceOuterClass.*;
 import net.devh.boot.grpc.server.service.GrpcService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -16,11 +16,11 @@ import java.security.SecureRandom;
 
 @GrpcService
 public class AuthService extends AuthServiceImplBase {
-    Logger logger = LoggerFactory.getLogger(AuthService.class);
+    private final KafkaSender kafkaSender;
+    private final AccountRepository repository;
 
-    AccountRepository repository;
-
-    public AuthService(@Autowired AccountRepository repository) {
+    public AuthService(@Autowired AccountRepository repository, @Autowired KafkaSender kafkaSender) {
+        this.kafkaSender = kafkaSender;
         this.repository = repository;
     }
 
@@ -34,7 +34,7 @@ public class AuthService extends AuthServiceImplBase {
         //Check if email is used
         if(repository.existsAccountEntityByEmailEquals(email)) {
             response.setStatus(false).setMessage("Email in use");
-            logger.info("Account creation failed, email used: " + email);
+            kafkaSender.sendKafkaLogging("Account creation failed, email used: " + email, KafkaLoggingType.WARN);
         } else {
             //Save new account
             AccountEntity account = new AccountEntity();
@@ -42,7 +42,7 @@ public class AuthService extends AuthServiceImplBase {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10, new SecureRandom());
             account.setPassword(encoder.encode(password));
             response.setAccount(repository.save(account).toAccountClass()).setStatus(true).setMessage("Success");
-            logger.info("Register request success, email: " + email);
+            kafkaSender.sendKafkaLogging("Account creation success, email used: " + email, KafkaLoggingType.INFO);
         }
 
         responseObserver.onNext(response.build());
@@ -58,10 +58,10 @@ public class AuthService extends AuthServiceImplBase {
         if(accountToCheck != null && encoder.matches(request.getPassword(), accountToCheck.getPassword())) {
             String token = new JwtTokenUtil().generateToken(request.getEmail());
             response.setStatus(true).setMessage(token);
-            logger.info("Successful login, email: " + request.getEmail());
+            kafkaSender.sendKafkaLogging("Successful login, email: " + request.getEmail(), KafkaLoggingType.INFO);
         } else {
             response.setStatus(false).setMessage("Wrong email/password");
-            logger.info("failed login, email: " + request.getEmail());
+            kafkaSender.sendKafkaLogging("failed login, email: " + request.getEmail(), KafkaLoggingType.WARN);
         }
 
         responseObserver.onNext(response.build());
@@ -75,10 +75,10 @@ public class AuthService extends AuthServiceImplBase {
 
         if(new JwtTokenUtil().validateToken(request.getToken())) {
             response.setStatus(true).setMessage("Valid token");
-            logger.info("Token validated");
+            kafkaSender.sendKafkaLogging("Valid token", KafkaLoggingType.WARN);
         } else {
             response.setStatus(false).setMessage("Invalid token");
-            logger.info("Invalid token");
+            kafkaSender.sendKafkaLogging("Invalid token", KafkaLoggingType.WARN);
         }
 
         responseObserver.onNext(response.build());
@@ -93,10 +93,10 @@ public class AuthService extends AuthServiceImplBase {
 
         if(entity != null) {
             response.setStatus(true).setMessage("Success").setAccount(entity.toAccountClass());
-            logger.info("Found account by email");
+            kafkaSender.sendKafkaLogging("Found account with email: " + request.getEmail(), KafkaLoggingType.INFO);
         } else {
             response.setStatus(false).setMessage("Account not found");
-            logger.info("Account not found");
+            kafkaSender.sendKafkaLogging("Account not found with email: " + request.getEmail(), KafkaLoggingType.WARN);
         }
 
         responseObserver.onNext(response.build());
