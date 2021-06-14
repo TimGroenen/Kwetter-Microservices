@@ -2,6 +2,8 @@ package com.kwetter.messageService.proto;
 
 import com.kwetter.messageService.entities.TweetEntity;
 import com.kwetter.messageService.entities.TweetLikedEntity;
+import com.kwetter.messageService.kafka.KafkaSender;
+import com.kwetter.messageService.kafka.message.KafkaLoggingType;
 import com.kwetter.messageService.repositories.TweetLikedRepository;
 import com.kwetter.messageService.repositories.TweetRepository;
 import io.grpc.stub.StreamObserver;
@@ -16,13 +18,13 @@ import java.util.List;
 
 @GrpcService
 public class MessageService extends MessageServiceGrpc.MessageServiceImplBase {
-    private final Logger logger = LoggerFactory.getLogger(MessageService.class);
+    private final KafkaSender kafkaSender;
+    private final TweetRepository tweetRepository;
+    private final TweetLikedRepository tweetLikedRepository;
 
-    private TweetRepository tweetRepository;
-    private TweetLikedRepository tweetLikedRepository;
-
-    public MessageService(@Autowired TweetRepository tweetRepository, @Autowired TweetLikedRepository tweetLikedRepository) {
+    public MessageService(@Autowired TweetRepository tweetRepository, @Autowired TweetLikedRepository tweetLikedRepository, @Autowired KafkaSender kafkaSender) {
         this.tweetLikedRepository = tweetLikedRepository;
+        this.kafkaSender = kafkaSender;
         this.tweetRepository = tweetRepository;
     }
 
@@ -34,7 +36,7 @@ public class MessageService extends MessageServiceGrpc.MessageServiceImplBase {
         TweetEntity entity = new TweetEntity(request.getProfileId(), request.getContent());
         tweetRepository.save(entity);
 
-        logger.info("New Tweet created for profile: " + request.getProfileId());
+        kafkaSender.sendKafkaLogging("New Tweet created for profile: " + request.getProfileId(), KafkaLoggingType.INFO);
 
         responseObserver.onNext(response.setStatus(true).setMessage("Success").build());
         responseObserver.onCompleted();
@@ -48,7 +50,7 @@ public class MessageService extends MessageServiceGrpc.MessageServiceImplBase {
             TweetEntity entity = new TweetEntity(request.getTweet());
 
             if(tweetRepository.existsById(entity.getId())) {
-                logger.info("Tweet with profileId: " + entity.getProfileId() + ", updated");
+                kafkaSender.sendKafkaLogging("Tweet with profileId: " + entity.getProfileId() + ", updated", KafkaLoggingType.INFO);
                 response.setStatus(true).setMessage("Success").setTweet(tweetRepository.save(entity).toTweetClass());
             } else {
                 response.setStatus(false).setMessage("Tweet with id does not exist");
@@ -71,7 +73,7 @@ public class MessageService extends MessageServiceGrpc.MessageServiceImplBase {
             tweetRepository.delete(entity);
             response.setStatus(true).setMessage("Success");
         } else {
-            logger.info("Tweet to delete not found");
+            kafkaSender.sendKafkaLogging("Tweet to delete not found", KafkaLoggingType.WARN);
             response.setMessage("Not found").setStatus(false);
         }
 
@@ -112,11 +114,11 @@ public class MessageService extends MessageServiceGrpc.MessageServiceImplBase {
                 response.setStatus(true).setMessage("Success");
             } else {
                 //Like row already exists
-                logger.info("Message is already liked by profile");
+                kafkaSender.sendKafkaLogging("Message is already liked by profile", KafkaLoggingType.WARN);
                 response.setStatus(false).setMessage("Message is already liked by profile");
             }
         } else {
-            logger.info("Tweet not found");
+            kafkaSender.sendKafkaLogging("Tweet not found", KafkaLoggingType.WARN);
             response.setStatus(false).setMessage("Tweet does not exist");
         }
 
@@ -137,7 +139,7 @@ public class MessageService extends MessageServiceGrpc.MessageServiceImplBase {
             response.setStatus(true).setMessage("Success");
         } else {
             //User is not followed
-            logger.info("Tweet is not liked");
+            kafkaSender.sendKafkaLogging("Tweet is not liked", KafkaLoggingType.WARN);
             response.setStatus(false).setMessage("Tweet is not liked");
         }
 
