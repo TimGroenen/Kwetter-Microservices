@@ -2,6 +2,7 @@ package com.kwetter.profileService;
 
 import com.kwetter.profileService.entities.FollowUserEntity;
 import com.kwetter.profileService.entities.ProfileEntity;
+import com.kwetter.profileService.kafka.KafkaSender;
 import com.kwetter.profileService.proto.ProfileService;
 import com.kwetter.profileService.proto.ProfileServiceOuterClass.*;
 import com.kwetter.profileService.repository.FollowUserRepository;
@@ -30,12 +31,15 @@ class ProfileServiceApplicationTests {
 	@Mock
 	private FollowUserRepository followRepo;
 
+	@Mock
+	private KafkaSender kafkaSender;
+
 	private ProfileEntity entity;
 	private FollowUserEntity followEntity;
 
 	@BeforeEach
 	void setUp() {
-		service = new ProfileService(profileRepo, followRepo);
+		service = new ProfileService(profileRepo, followRepo, kafkaSender);
 		entity = new ProfileEntity();
 		entity.setId(1L);
 		entity.setAccountId(1L);

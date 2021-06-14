@@ -2,6 +2,8 @@ package com.kwetter.profileService.proto;
 
 import com.kwetter.profileService.entities.FollowUserEntity;
 import com.kwetter.profileService.entities.ProfileEntity;
+import com.kwetter.profileService.kafka.KafkaSender;
+import com.kwetter.profileService.kafka.message.KafkaLoggingType;
 import com.kwetter.profileService.proto.ProfileServiceGrpc.*;
 import com.kwetter.profileService.repository.FollowUserRepository;
 import com.kwetter.profileService.repository.ProfileRepository;
@@ -14,13 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @GrpcService
 public class ProfileService extends ProfileServiceImplBase {
-    private final Logger logger = LoggerFactory.getLogger(ProfileService.class);
+    private final KafkaSender kafkaSender;
 
     private ProfileRepository profileRepository;
     private FollowUserRepository followUserRepository;
 
-    public ProfileService(@Autowired ProfileRepository profileRepository, @Autowired FollowUserRepository followUserRepository) {
+    public ProfileService(@Autowired ProfileRepository profileRepository, @Autowired FollowUserRepository followUserRepository, @Autowired KafkaSender kafkaSender) {
         this.profileRepository = profileRepository;
+        this.kafkaSender = kafkaSender;
         this.followUserRepository = followUserRepository;
     }
 
@@ -31,6 +34,7 @@ public class ProfileService extends ProfileServiceImplBase {
         //Check if a profile with accountId exists
         if(profileRepository.existsByAccountId(request.getAccountId())) {
             response.setStatus(false).setMessage("Profile with accountId exists");
+            kafkaSender.sendKafkaLogging("Profile with accountId: " + request.getAccountId() + " exists", KafkaLoggingType.WARN);
         } else {
             ProfileEntity profileEntity = new ProfileEntity();
             profileEntity.setAccountId(request.getAccountId());
@@ -38,7 +42,7 @@ public class ProfileService extends ProfileServiceImplBase {
             profileEntity.setBio("");
             profileEntity.setLocation("");
             profileEntity.setWebsite("");
-            logger.info("New profile with name: " + profileEntity.getName() + ", created");
+            kafkaSender.sendKafkaLogging("New profile with name: " + profileEntity.getName() + ", created", KafkaLoggingType.INFO);
             response.setProfile(profileRepository.save(profileEntity).toProfileClass()).setStatus(true).setMessage("Success");
         }
 
@@ -54,7 +58,7 @@ public class ProfileService extends ProfileServiceImplBase {
             ProfileEntity entity = new ProfileEntity(request.getProfile());
 
             if(profileRepository.existsById(entity.getId())) {
-                logger.info("Profile with name: " + entity.getName() + ", updated");
+                kafkaSender.sendKafkaLogging("Profile with name: " + entity.getName() + ", updated", KafkaLoggingType.INFO);
                 response.setStatus(true).setMessage("Success").setProfile(profileRepository.save(entity).toProfileClass());
             } else {
                 response.setStatus(false).setMessage("Profile with id does not exist");
@@ -74,10 +78,10 @@ public class ProfileService extends ProfileServiceImplBase {
         ProfileEntity entity = profileRepository.getById(request.getProfileId());
 
         if(entity == null) {
-            logger.info("Profile not found");
+            kafkaSender.sendKafkaLogging("Profile not found", KafkaLoggingType.WARN);
             response.setStatus(false).setMessage("Profile not found");
         } else {
-            logger.info("Found profile with name: " + entity.getName());
+            kafkaSender.sendKafkaLogging("Found profile with name: " + entity.getName(), KafkaLoggingType.INFO);
             response.setProfile(entity.toProfileClass()).setStatus(true).setMessage("Success");
         }
 
@@ -92,10 +96,10 @@ public class ProfileService extends ProfileServiceImplBase {
         ProfileEntity entity = profileRepository.getByAccountId(request.getUserId());
 
         if(entity == null) {
-            logger.info("Profile not found");
+            kafkaSender.sendKafkaLogging("Profile not found", KafkaLoggingType.WARN);
             response.setStatus(false).setMessage("Profile not found");
         } else {
-            logger.info("Found profile with name: " + entity.getName());
+            kafkaSender.sendKafkaLogging("Found profile with name: " + entity.getName(), KafkaLoggingType.INFO);
             response.setProfile(entity.toProfileClass()).setStatus(true).setMessage("Success");
         }
 
@@ -118,14 +122,15 @@ public class ProfileService extends ProfileServiceImplBase {
                                 profileRepository.getById(request.getUserFollowedId())
                         )
                 );
+                kafkaSender.sendKafkaLogging("User followed successfully", KafkaLoggingType.INFO);
                 response.setStatus(true).setMessage("Success");
             } else {
                 //Follow row already exists
-                logger.info("User is already followed");
+                kafkaSender.sendKafkaLogging("User is already followed", KafkaLoggingType.WARN);
                 response.setStatus(false).setMessage("User is already followed");
             }
         } else {
-            logger.info("Profile not found");
+            kafkaSender.sendKafkaLogging("Profile not found", KafkaLoggingType.WARN);
             response.setStatus(false).setMessage("Profile does not exist");
         }
 
@@ -143,10 +148,11 @@ public class ProfileService extends ProfileServiceImplBase {
         if (result != null) {
             //Delete the row
             followUserRepository.delete(result);
+            kafkaSender.sendKafkaLogging("User unfollowed successfully", KafkaLoggingType.INFO);
             response.setStatus(true).setMessage("Success");
         } else {
             //User is not followed
-            logger.info("User is not followed");
+            kafkaSender.sendKafkaLogging("User is not followed", KafkaLoggingType.WARN);
             response.setStatus(false).setMessage("User is not followed");
         }
 
@@ -164,7 +170,7 @@ public class ProfileService extends ProfileServiceImplBase {
             response.addProfiles(f.getUserFollowed().toProfileClass());
         }
 
-        logger.info("Returning followed for ProfileId: " + request.getProfileId());
+        kafkaSender.sendKafkaLogging("Returning followed for ProfileId: " + request.getProfileId(), KafkaLoggingType.INFO);
         responseObserver.onNext(response.build());
         responseObserver.onCompleted();
     }
@@ -179,7 +185,7 @@ public class ProfileService extends ProfileServiceImplBase {
             response.addProfiles(f.getUserFollowing().toProfileClass());
         }
 
-        logger.info("Returning followers for ProfileId: " + request.getProfileId());
+        kafkaSender.sendKafkaLogging("Returning followers for ProfileId: " + request.getProfileId(), KafkaLoggingType.INFO);
         responseObserver.onNext(response.build());
         responseObserver.onCompleted();
     }
